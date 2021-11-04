@@ -55,9 +55,13 @@ FUNC is what is ran after creating the buffer."
   "Reload FEATURE.
 
 Optionally provide feature's FEATURE-PATH."
-  (if (featurep feature)
-      (unload-feature feature t))
-  (require feature feature-path))
+  (let ((feature-path (or feature-path
+                          (expand-file-name (concat (symbol-name feature)
+                                                    ".el")
+                                            (file-name-directory (buffer-file-name))))))
+    (if (featurep feature)
+        (unload-feature feature t))
+    (require feature feature-path)))
 
 
 (defun my-ert-nil-func (&rest _)
